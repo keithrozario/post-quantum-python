@@ -2,7 +2,7 @@ ARG PYTHON_MAJOR_VERSION=3.12
 ARG PYTHON_VERSION=3.12.0
 ARG PYTHON_INSTALL_DIR=/opt/python
 
-FROM openquantumsafe/oqs-ossl3:interop as build
+FROM openquantumsafe/oqs-ossl3:interop@sha256:cc15fb9330069c941242877524dc503a26f468c640973168f745a7db1502ffa6 as build
 
 ARG PYTHON_VERSION
 ARG PYTHON_INSTALL_DIR
@@ -11,16 +11,17 @@ ARG TZ=Etc/UTC
 ARG OPENSSL_DIR=/opt/openssl32
 ARG PYTHON_DOWNLOAD_DIR=/tmp/python
 
-RUN apt update && apt upgrade -y
+RUN apt-get update 
+RUN apt-get upgrade -y
 
 RUN ln -s /usr/share/zoneinfo/$TZ /etc/localtime
 RUN echo $TZ > /etc/timezone
 
-RUN apt install -y libncurses-dev libbz2-dev libgdbm-dev liblzma-dev libssl-dev tk-dev \
+RUN apt-get install -y libncurses-dev libbz2-dev libgdbm-dev liblzma-dev libssl-dev tk-dev \
                uuid-dev libreadline-dev libsqlite3-dev libffi-dev gcc make automake \
                wget libgdbm-dev libgdbm-compat-dev
 # for --enable-optimizations
-RUN apt install -y llvm
+RUN apt-get install -y llvm
 
 # Download Python
 RUN mkdir $PYTHON_DOWNLOAD_DIR
@@ -42,11 +43,11 @@ ENV DEFAULT_GROUPS=x25519
 WORKDIR /
 RUN ln -s $PYTHON_INSTALL_DIR/bin/pip3 /usr/bin/pip
 COPY dependencies/requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
 
 # Final image
-FROM openquantumsafe/oqs-ossl3:interop as final
+FROM openquantumsafe/oqs-ossl3:interop@sha256:cc15fb9330069c941242877524dc503a26f468c640973168f745a7db1502ffa6 as final
 
 ARG PYTHON_MAJOR_VERSION
 ARG PYTHON_INSTALL_DIR
@@ -61,6 +62,6 @@ WORKDIR /var/pq_python_test
 COPY test/ .
 RUN chmod -R +x .
 
-HEALTHCHECK CMD python3
+HEALTHCHECK CMD python3 check_openssl_version.py || exit 1
 
-ENTRYPOINT [ "/bin/bash"]
+ENTRYPOINT [ "/bin/bash", "test.sh"]

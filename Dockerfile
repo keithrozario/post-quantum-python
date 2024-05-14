@@ -12,7 +12,6 @@ ARG OPENSSL_DIR=/opt/openssl32
 ARG PYTHON_DOWNLOAD_DIR=/tmp/python
 
 RUN apt-get update 
-RUN apt-get upgrade -y
 
 RUN ln -s /usr/share/zoneinfo/$TZ /etc/localtime
 RUN echo $TZ > /etc/timezone
@@ -29,7 +28,8 @@ WORKDIR $PYTHON_DOWNLOAD_DIR
 RUN wget https://www.python.org/ftp/python/$PYTHON_VERSION/Python-$PYTHON_VERSION.tgz && \
         tar -xvf Python-$PYTHON_VERSION.tgz
 
-# Build python with statically linked openssl
+# Build python with linked openssl
+# 
 WORKDIR $PYTHON_DOWNLOAD_DIR/Python-$PYTHON_VERSION
 ENV LDFLAGS="-L$OPENSSL_DIR/lib -L$OPENSSL_DIR/lib64"
 ENV LD_LIBRARY_PATH="$OPENSSL_DIR/lib:$OPENSSL_DIR/lib64"
@@ -60,8 +60,14 @@ RUN ln -s $PYTHON_DIR/bin/pip3 /usr/bin/pip
 RUN mkdir /var/pq_python_test
 WORKDIR /var/pq_python_test
 COPY test/ .
-RUN chmod -R +x .
 
-HEALTHCHECK CMD python3 check_openssl_version.py || exit 1
+
+RUN useradd -rm -d /home/pquser -s /bin/bash -g root -G sudo -u 1001 pquser
+RUN chmod -R +x .
+RUN chown pquser:root .
+
+USER pquser
+
+HEALTHCHECK CMD ["python3", "check_openssl_version.py"] || exit 1
 
 ENTRYPOINT [ "/bin/bash", "test.sh"]

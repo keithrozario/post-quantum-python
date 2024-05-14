@@ -61,4 +61,6 @@ WORKDIR /var/pq_python_test
 COPY test/ .
 RUN chmod -R +x .
 
+HEALTHCHECK CMD python3
+
 ENTRYPOINT [ "/bin/bash"]

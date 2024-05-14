@@ -13,7 +13,7 @@ def _connect(self):
 
 requests.packages.urllib3.connection.VerifiedHTTPSConnection.connect = _connect
 
-requests.get('https://yahoo.com')
+requests.get('https://yahoo.com', timeout=3)
 tlscon = SOCK.connection
 print('hello')
 

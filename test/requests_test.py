@@ -2,10 +2,7 @@ import requests
 import os
 
 
-# GROUP to Port mapping here:
-# https://test.openquantumsafe.org/assignments.json
-
-kyber_endpoint = 'https://test.openquantumsafe.org:6041'
+kyber_endpoint = 'https://secretsmanager.us-east-1.amazonaws.com/ping'
 expected_group = 'x25519_kyber512'
 
 # Check environment variables

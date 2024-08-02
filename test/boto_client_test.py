@@ -6,7 +6,7 @@ import os
 # reduce max attempts to speed up test (no retries on failure)
 config = Config(retries = {'total_max_attempts': 1})
 region = 'ap-southeast-1'
-kms_client=boto3.client('kms', region_name=region, config=config)
+secretsmanager_client=boto3.client('secretsmanager', region_name=region, config=config)
 dynamodb_client=boto3.client('dynamodb', region_name=region, config=config)
 
 OPENSSL_GROUP = os.environ['DEFAULT_GROUPS']
@@ -23,7 +23,7 @@ else:
     except SSLError:
         print(f"GOOD: Failed connected to DynamoDB endpoint with {OPENSSL_GROUP} - expected")
         
-assert kms_client.list_keys()['ResponseMetadata']['HTTPStatusCode'] == 200
-print(f"GOOD: Successfully connected to KMS endpoint with {OPENSSL_GROUP}")
+assert secretsmanager_client.list_secrets()['ResponseMetadata']['HTTPStatusCode'] == 200
+print(f"GOOD: Successfully connected to SecretsManager endpoint with {OPENSSL_GROUP}")
 
 print(f"## END Test {OPENSSL_GROUP}\n\n")

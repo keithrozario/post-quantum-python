@@ -22,7 +22,7 @@ RUN rm -f /usr/bin/go /usr/bin/gofmt \
 
 RUN mkdir $AWSLC_DOWNLOAD_DIR
 WORKDIR $AWSLC_DOWNLOAD_DIR
-RUN git clone -b pq-tls https://github.com/WillChilds-Klein/aws-lc .
+RUN git clone -b pq-python https://github.com/WillChilds-Klein/aws-lc .
 
 RUN mkdir $AWSLC_INSTALL_DIR
 RUN cmake \
@@ -74,5 +74,6 @@ USER pquser
 
 HEALTHCHECK CMD ["python3", "check_openssl_version.py"] || exit 1
 
+# TODO [childw] how to build and install latest AWS-LC and python?
 
 CMD [ "/bin/bash", "test.sh"]

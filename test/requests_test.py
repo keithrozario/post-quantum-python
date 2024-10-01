@@ -1,15 +1,17 @@
-import requests
 import os
+import ssl
 
+import requests
+import urllib3
 
-kyber_endpoint = 'https://secretsmanager.us-east-1.amazonaws.com/ping'
-expected_group = 'x25519_kyber512'
+assert "AWS-LC" in ssl.OPENSSL_VERSION
 
-# Check environment variables
-print(f"## Test with {expected_group} against {kyber_endpoint} using requests")
-assert os.environ['DEFAULT_GROUPS'] == expected_group
-response = requests.get(kyber_endpoint, timeout=3)
+CERT_STORE = "/etc/ssl/certs/ca-certificates.crt"
+ENDPOINT = "https://secretsmanager.us-east-1.amazonaws.com/ping"
+GROUP = os.environ["DEFAULT_GROUPS"]
+
+print(f"## Test with {GROUP} against {ENDPOINT} using requests")
+
+response = requests.get(ENDPOINT, timeout=3)
 assert response.status_code == 200
-print(f"Successfully connected to {kyber_endpoint} using {expected_group}")
-
-
+print(f"Successfully connected to {ENDPOINT} using {GROUP}")

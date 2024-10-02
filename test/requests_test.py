@@ -7,11 +7,11 @@ import urllib3
 assert "AWS-LC" in ssl.OPENSSL_VERSION
 
 CERT_STORE = "/etc/ssl/certs/ca-certificates.crt"
-ENDPOINT = "https://secretsmanager.us-east-1.amazonaws.com/ping"
 GROUP = os.environ["DEFAULT_GROUPS"]
+REGION = "us-east-1"
+ENDPOINT = f"https://secretsmanager.{REGION}.amazonaws.com/ping"
 
-print(f"## Test with {GROUP} against {ENDPOINT} using requests")
-
+print(f"requests:\tConnecting to {REGION} SecretsManager endpoint with {GROUP}... ", end="")
 response = requests.get(ENDPOINT, timeout=3)
 assert response.status_code == 200
-print(f"Successfully connected to {ENDPOINT} using {GROUP}")
+print("ok")

@@ -1,0 +1,34 @@
+diff --git a/Modules/Setup b/Modules/Setup
+index ddf39e0b966..b4e9d078513 100644
+--- a/Modules/Setup
++++ b/Modules/Setup
+@@ -211,11 +211,11 @@ PYTHONPATH=$(COREPYTHONPATH)
+ #_hashlib _hashopenssl.c $(OPENSSL_INCLUDES) $(OPENSSL_LDFLAGS) -lcrypto
+ 
+ # To statically link OpenSSL:
+-# _ssl _ssl.c $(OPENSSL_INCLUDES) $(OPENSSL_LDFLAGS) \
+-#     -l:libssl.a -Wl,--exclude-libs,libssl.a \
+-#     -l:libcrypto.a -Wl,--exclude-libs,libcrypto.a
+-# _hashlib _hashopenssl.c $(OPENSSL_INCLUDES) $(OPENSSL_LDFLAGS) \
+-#     -l:libcrypto.a -Wl,--exclude-libs,libcrypto.a
++_ssl _ssl.c $(OPENSSL_INCLUDES) $(OPENSSL_LDFLAGS) \
++    -l:libssl.a -Wl,--exclude-libs,libssl.a \
++    -l:libcrypto.a -Wl,--exclude-libs,libcrypto.a
++_hashlib _hashopenssl.c $(OPENSSL_INCLUDES) $(OPENSSL_LDFLAGS) \
++    -l:libcrypto.a -Wl,--exclude-libs,libcrypto.a
+ 
+ # The _tkinter module.
+ #
+diff --git a/Modules/_ssl.c b/Modules/_ssl.c
+index f2d3b331226..01db5d94884 100644
+--- a/Modules/_ssl.c
++++ b/Modules/_ssl.c
+@@ -4340,7 +4340,7 @@ _ssl__SSLContext_set_ecdh_curve(PySSLContext *self, PyObject *name)
+                      "unknown elliptic curve name %R", name);
+         return NULL;
+     }
+-#if OPENSSL_VERSION_MAJOR < 3
++#if OPENSSL_VERSION_MAJOR < 3 && !defined(OPENSSL_IS_AWSLC)
+     EC_KEY *key = EC_KEY_new_by_curve_name(nid);
+     if (key == NULL) {
+         _setSSLError(get_state_ctx(self), NULL, 0, __FILE__, __LINE__);

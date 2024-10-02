@@ -1,0 +1,30 @@
+diff --git a/ssl/ssl_lib.cc b/ssl/ssl_lib.cc
+index c74aa04b1..ced1ad31f 100644
+--- a/ssl/ssl_lib.cc
++++ b/ssl/ssl_lib.cc
+@@ -602,6 +602,12 @@ SSL_CTX *SSL_CTX_new(const SSL_METHOD *method) {
+   ret->conf_min_version_use_default = true;
+   ret->enable_read_ahead = false;
+ 
++  const char *default_groups = getenv("DEFAULT_GROUPS");
++  if (default_groups && !SSL_CTX_set1_groups_list(ret.get(), default_groups)) {
++    fprintf(stderr, "ERROR SETTING SSL DEFAULT_GROUPS %s\n", default_groups);
++    abort();
++  }
++
+   return ret.release();
+ }
+ 
+@@ -711,6 +717,12 @@ SSL *SSL_new(SSL_CTX *ctx) {
+     return nullptr;
+   }
+ 
++  const char *default_groups = getenv("DEFAULT_GROUPS");
++  if (default_groups && !SSL_set1_groups_list(ssl.get(), default_groups)) {
++    fprintf(stderr, "ERROR SETTING SSL DEFAULT_GROUPS %s\n", default_groups);
++    abort();
++  }
++
+   return ssl.release();
+ }
+ 

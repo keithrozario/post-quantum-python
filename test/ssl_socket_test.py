@@ -17,7 +17,7 @@ def connect(group: str):
     ctx.set_ecdh_curve(group)
     ctx.load_verify_locations(CERT_STORE)
     print(
-        f"socket:\tConnecting to {REGION} SecretsManager endpoint with {group}... ",
+        f"socket:\t\tConnecting to {REGION} SecretsManager endpoint with {group}... ",
         end="",
     )
     sock = socket.create_connection((HOST, 443))

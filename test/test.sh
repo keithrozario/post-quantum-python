@@ -7,6 +7,10 @@ set -e
 # python's standard library ssl module.
 python3 ssl_socket_test.py
 
+# urllib3 issues a warning when it's linked against non-OpenSSL
+# libcrypto/libssl. suppress that warning.
+export PYTHONWARNINGS="ignore"
+
 # TODO [childw] once ML-KEM is deployed to Secrets Manager endpoings, remove
 # all Kyber references
 

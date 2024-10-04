@@ -75,7 +75,6 @@ RUN rm -f /usr/bin/pip \
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 
-# TODO [childw] clean up build/final images?
 FROM public.ecr.aws/ubuntu/ubuntu:22.04_stable as final
 
 ARG PYTHON_INSTALL_DIR
@@ -93,8 +92,5 @@ RUN chown pquser:root .
 USER pquser
 
 HEALTHCHECK CMD ["python3", "check_openssl_version.py"] || exit 1
-
-# TODO [childw] how to build and install latest AWS-LC and python?
-# TODO [childw] pin python and aws-lc to specific version tag?
 
 CMD [ "/bin/bash", "test.sh"]

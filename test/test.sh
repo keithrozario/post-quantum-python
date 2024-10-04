@@ -11,8 +11,8 @@ python3 ssl_socket_test.py
 # libcrypto/libssl. suppress that warning.
 export PYTHONWARNINGS="ignore"
 
-# TODO [childw] once ML-KEM is deployed to Secrets Manager endpoings, remove
-# all Kyber references
+# TODO once ML-KEM is deployed to Secrets Manager endpoings, remove all Kyber
+# references
 
 # requests is built on urllib3, which uses CPython's ssl module under the hood.
 # our patches to AWS-LC detect key exchange groups from environment variables

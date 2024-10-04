@@ -6,7 +6,6 @@ import requests
 
 assert "AWS-LC" in ssl.OPENSSL_VERSION
 
-CERT_STORE = "/etc/ssl/certs/ca-certificates.crt"
 GROUP = os.environ["DEFAULT_GROUPS"]
 REGION = "us-east-1"
 ENDPOINT = f"https://secretsmanager.{REGION}.amazonaws.com/ping"

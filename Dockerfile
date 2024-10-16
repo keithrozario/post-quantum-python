@@ -1,4 +1,4 @@
-FROM public.ecr.aws/ubuntu/ubuntu:22.04_stable as build
+FROM public.ecr.aws/ubuntu/ubuntu:22.04_stable AS build
 
 ARG PYTHON_INSTALL_DIR=/opt/python
 ARG AWSLC_INSTALL_DIR=/opt/awslc
@@ -75,7 +75,7 @@ RUN rm -f /usr/bin/pip \
 COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir
 
-FROM public.ecr.aws/ubuntu/ubuntu:22.04_stable as final
+FROM public.ecr.aws/ubuntu/ubuntu:22.04_stable AS final
 
 ARG PYTHON_INSTALL_DIR
 
